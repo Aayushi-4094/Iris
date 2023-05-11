@@ -4,6 +4,8 @@ import speech_recognition as sr
 import wikipedia
 import webbrowser
 import os
+import smtplib
+
 
 
 engine = pyttsx3.init('sapi5') #sapi5 is a speech api developed by microsoft
@@ -48,6 +50,14 @@ def takeCommand():
         return "None" #None string will be returned
     return query
 
+def sendEmail(to, content):
+    #This function is used to send email
+    server = smtplib.SMTP('smtp.gmail.com', 587)#creates a session
+    server.ehlo()
+    server.starttls()
+    server.login('email-from where the email has to be sent ','password')#login to the email
+    server.sendmail('email-from where the email has to be sent', to ,content)
+    server.close()
 
 if __name__ == "__main__":
     wisME()
@@ -79,6 +89,19 @@ if __name__ == "__main__":
         elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")    
             speak(f"Ma'am, the time is {strTime}") 
+
+
+        elif 'email to aayushi' in query:
+            try:
+                speak("What should I say?")
+                content = takeCommand()#takes the command
+                to = "email-received by"
+                sendEmail(to, content)#sends the email
+                speak("Email has been sent!")
+            except Exception as e:
+                print(e)
+                speak("Sorry my friend aayushi. I am not able to send this email") 
+
 
         
 
